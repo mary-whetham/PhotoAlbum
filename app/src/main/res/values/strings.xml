@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Photo Album</string>
+    <string name="photo_number">Photo Number</string>
+    <string name="album_number">Album Number</string>
+    <string name="get_photos">Find</string>
+    <string-array name="photos_type_array">
+        <item>A Photo</item>
+        <item>An Album</item>
+        <item>All Photos</item>
+    </string-array>
+</resources>
