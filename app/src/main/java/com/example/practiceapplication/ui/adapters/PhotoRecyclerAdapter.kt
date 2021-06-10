@@ -49,9 +49,10 @@ class PhotoRecyclerAdapter(
     }
 
     override fun getItemCount(): Int {
+        /*
         if (photos.isEmpty()) {
             Toast.makeText(context, "No photos", Toast.LENGTH_LONG).show()
-        }
+        }*/
 
         return photos.size
     }
