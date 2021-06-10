@@ -8,4 +8,8 @@
         <item>An Album</item>
         <item>All Photos</item>
     </string-array>
+    <string-array name="layout_type_array">
+        <item>One Column</item>
+        <item>Two Columns</item>
+    </string-array>
 </resources>
