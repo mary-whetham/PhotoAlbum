@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".ui.fragments.ViewCalendarFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/calendar_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginVertical="10dp">
+
+                <ImageButton
+                    android:id="@+id/left_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_left_arrow"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/left_date_button" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:textSize="30sp"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintLeft_toRightOf="@+id/left_button"
+                    app:layout_constraintRight_toLeftOf="@+id/right_button"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/right_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_right_arrow"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/right_date_button" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginVertical="25dp">
+
+                <TextView
+                    android:id="@+id/event_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/event_title"
+                    android:textSize="30sp" />
+
+                <com.example.practiceapplication.ui.widgets.RecyclerViewEmptySupport
+                    android:id="@+id/event_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginVertical="25dp">
+
+                <TextView
+                    android:id="@+id/reminder_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/reminder_title"
+                    android:textSize="30sp"/>
+
+                <com.example.practiceapplication.ui.widgets.RecyclerViewEmptySupport
+                    android:id="@+id/reminder_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_add"
+        android:layout_weight="1"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/add_button" />
+
+</FrameLayout>

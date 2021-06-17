@@ -12,6 +12,40 @@
         <item>One Column</item>
         <item>Two Columns</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="event_title">Events</string>
+    <string name="reminder_title">Reminders</string>
+    <string name="no_events">You have no events</string>
+    <string name="no_reminders">You have no reminders</string>
+    <string-array name="calendar_type_array">
+        <item>Event</item>
+        <item>Reminder</item>
+    </string-array>
+    <string name="title">Title: </string>
+    <string name="description">Description: </string>
+    <string name="location">Location: </string>
+    <string name="date">Date: </string>
+    <string name="time">Time: </string>
+    <string name="frequency">Frequency: </string>
+    <string-array name="event_frequency_array">
+        <item>Once</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
+    <string-array name="reminder_frequency_array">
+        <item>Once</item>
+        <item>Every half hour</item>
+        <item>Every hour</item>
+        <item>Every 3 hours</item>
+        <item>Every 12 hours</item>
+        <item>Daily</item>
+    </string-array>
+    <string name="add_event">Add Event</string>
+    <string name="add_reminder">Add Reminder</string>
+    <string name="channel_name">Notification Channel</string>
+    <string name="channel_description">Channel to send app notifications through</string>
+    <string name="add_button">add_button</string>
+    <string name="right_date_button">right_date_button</string>
+    <string name="left_date_button">left_date_button</string>
 </resources>
