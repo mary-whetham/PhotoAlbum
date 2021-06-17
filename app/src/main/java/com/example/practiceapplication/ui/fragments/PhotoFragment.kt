@@ -2,36 +2,23 @@ package com.example.practiceapplication.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.example.practiceapplication.R
 import com.example.practiceapplication.data.repository.PhotoRepository
 import com.example.practiceapplication.data.response.ApiService
 import com.example.practiceapplication.ui.adapters.PhotoRecyclerAdapter
-import com.example.practiceapplication.ui.adapters.TabAdapter
 import com.example.practiceapplication.ui.viewmodels.PhotoViewModel
 import com.example.practiceapplication.ui.viewmodels.PhotoViewModelFactory
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PhotoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PhotoFragment : Fragment(), AdapterView.OnItemSelectedListener {
-    // TODO: Rename and change types of parameters
 
     private lateinit var viewManager: GridLayoutManager
     private lateinit var photoViewModel: PhotoViewModel
@@ -96,20 +83,18 @@ class PhotoFragment : Fragment(), AdapterView.OnItemSelectedListener {
         viewManager = GridLayoutManager(view.context, 1)
         mainRecycler.layoutManager = viewManager
 
-        adapter = PhotoRecyclerAdapter(photoViewModel, view.context)
+        adapter = PhotoRecyclerAdapter(view.context)
         mainRecycler.adapter = adapter
 
-        photoViewModel.photo.observe(viewLifecycleOwner, Observer {
-            Log.i("data", it.toString())
+        photoViewModel.photo.observe(viewLifecycleOwner, {
             adapter.setPhotoList(mutableListOf(it))
         })
 
-        photoViewModel.photoList.observe(viewLifecycleOwner, Observer {
-            Log.i("data", it.toString())
+        photoViewModel.photoList.observe(viewLifecycleOwner, {
             adapter.setPhotoList(it)
         })
 
-        photoViewModel.errorMessage.observe(viewLifecycleOwner, Observer {
+        photoViewModel.errorMessage.observe(viewLifecycleOwner, {
             Log.i("error", it.toString())
         })
     }
@@ -131,7 +116,7 @@ class PhotoFragment : Fragment(), AdapterView.OnItemSelectedListener {
             } else if (parent.getItemAtPosition(position) == "Two Columns") {
                 viewManager.spanCount = 2
             }
-            adapter.notifyItemRangeChanged(0, adapter.itemCount ?: 0)
+            adapter.notifyItemRangeChanged(0, adapter.itemCount)
         }
     }
 

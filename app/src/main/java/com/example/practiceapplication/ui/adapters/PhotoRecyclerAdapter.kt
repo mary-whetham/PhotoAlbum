@@ -4,20 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practiceapplication.R
 import com.example.practiceapplication.ui.models.Photo
-import com.example.practiceapplication.ui.viewmodels.PhotoViewModel
 import com.example.practiceapplication.utils.GlideApp
 import kotlinx.android.synthetic.main.photo.view.*
 
 class PhotoRecyclerAdapter(
-    val viewModel: PhotoViewModel,
     val context: Context
 ) : RecyclerView.Adapter<PhotoRecyclerAdapter.PhotoViewHolder>() {
 
-    var photos = mutableListOf<Photo>()
+    private var photos = mutableListOf<Photo>()
 
     class PhotoViewHolder(
         private val binding: View
@@ -37,7 +34,7 @@ class PhotoRecyclerAdapter(
         parent: ViewGroup,
         viewType: Int
     ): PhotoViewHolder {
-        var root = LayoutInflater.from(parent.context).inflate(R.layout.photo, parent, false)
+        val root = LayoutInflater.from(parent.context).inflate(R.layout.photo, parent, false)
         return PhotoViewHolder(root)
     }
 
