@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import com.example.practiceapplication.R
+import com.example.practiceapplication.data.CalendarDatabase
+import com.example.practiceapplication.data.repository.CalendarRepository
 import com.example.practiceapplication.ui.viewmodels.CalendarViewModel
 import com.example.practiceapplication.ui.viewmodels.CalendarViewModelFactory
 
@@ -27,7 +29,9 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        calendarViewModel = ViewModelProvider(this, CalendarViewModelFactory()).get(CalendarViewModel::class.java)
+        val calendarDatabase by lazy { CalendarDatabase.invoke(view.context) }
+        val calendarRepository by lazy { CalendarRepository(calendarDatabase) }
+        calendarViewModel = ViewModelProvider(this, CalendarViewModelFactory(calendarRepository)).get(CalendarViewModel::class.java)
 
         childFragmentManager.beginTransaction().replace(R.id.calendar_container_view, ViewCalendarFragment()).commit()
     }

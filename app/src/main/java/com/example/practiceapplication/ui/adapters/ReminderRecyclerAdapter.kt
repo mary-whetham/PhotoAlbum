@@ -12,13 +12,10 @@ import java.time.LocalDate
 import java.util.*
 
 class ReminderRecyclerAdapter(
-    val context: Context,
-    currentDate: LocalDate
+    val context: Context
 ) : RecyclerView.Adapter<ReminderRecyclerAdapter.ReminderViewHolder>() {
 
     private var reminders = mutableListOf<Reminder>()
-    private var filteredReminders = mutableListOf<Reminder>()
-    private var date = currentDate
 
     class ReminderViewHolder(
         private val binding: View
@@ -36,20 +33,8 @@ class ReminderRecyclerAdapter(
         }
     }
 
-    fun setDate(date: LocalDate) {
-        this.date = date
-        setFilteredReminderList()
-    }
-
     fun setReminderList(reminders: List<Reminder>) {
         this.reminders = reminders.toMutableList()
-        setFilteredReminderList()
-    }
-
-    private fun setFilteredReminderList() {
-        this.filteredReminders = this.reminders.toMutableList().filter {
-            it.date == this.date
-        } as MutableList<Reminder>
         notifyDataSetChanged()
     }
 
@@ -70,6 +55,6 @@ class ReminderRecyclerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return filteredReminders.size
+        return reminders.size
     }
 }

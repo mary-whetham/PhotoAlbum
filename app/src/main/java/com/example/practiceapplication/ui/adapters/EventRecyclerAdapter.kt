@@ -12,13 +12,10 @@ import java.time.LocalDate
 import java.util.*
 
 class EventRecyclerAdapter(
-    val context: Context,
-    currentDate: LocalDate
+    val context: Context
 ) : RecyclerView.Adapter<EventRecyclerAdapter.EventViewHolder>() {
 
     private var events = mutableListOf<Event>()
-    private var filteredEvents = mutableListOf<Event>()
-    private var date = currentDate
 
     class EventViewHolder(
         private val binding: View
@@ -33,20 +30,8 @@ class EventRecyclerAdapter(
         }
     }
 
-    fun setDate(date: LocalDate) {
-        this.date = date
-        setFilteredEventList()
-    }
-
     fun setEventList(events: List<Event>) {
         this.events = events.toMutableList()
-        setFilteredEventList()
-    }
-
-    private fun setFilteredEventList() {
-        this.filteredEvents = this.events.toMutableList().filter {
-            it.date == this.date
-        } as MutableList<Event>
         notifyDataSetChanged()
     }
 
@@ -63,10 +48,10 @@ class EventRecyclerAdapter(
         holder: EventViewHolder,
         position: Int
     ) {
-        holder.bind(filteredEvents[position])
+        holder.bind(events[position])
     }
 
     override fun getItemCount(): Int {
-        return filteredEvents.size
+        return events.size
     }
 }
