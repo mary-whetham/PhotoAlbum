@@ -44,10 +44,12 @@ class ViewCalendarFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        super.onViewCreated(view, savedInstanceState)
 
-        eventAdapter = EventRecyclerAdapter(view.context, shownDate)
-        reminderAdapter = ReminderRecyclerAdapter(view.context, shownDate)
+        calendarViewModel.getDaysEvents(shownDate)
+        calendarViewModel.getDaysReminders(shownDate)
+
+        eventAdapter = EventRecyclerAdapter(view.context)
+        reminderAdapter = ReminderRecyclerAdapter(view.context)
         event_recycler.recyclerView.adapter = eventAdapter
         reminder_recycler.recyclerView.adapter = reminderAdapter
 
@@ -68,16 +70,16 @@ class ViewCalendarFragment : Fragment() {
         left_button.setOnClickListener{
             shownDate = shownDate.minusDays(1)
             date.text = shownDate.format(formatter)
-            eventAdapter.setDate(shownDate)
-            reminderAdapter.setDate(shownDate)
+            calendarViewModel.getDaysEvents(shownDate)
+            calendarViewModel.getDaysReminders(shownDate)
             checkIfEmpty()
         }
 
         right_button.setOnClickListener{
             shownDate = shownDate.plusDays(1)
             date.text = shownDate.format(formatter)
-            eventAdapter.setDate(shownDate)
-            reminderAdapter.setDate(shownDate)
+            calendarViewModel.getDaysEvents(shownDate)
+            calendarViewModel.getDaysReminders(shownDate)
             checkIfEmpty()
         }
 
