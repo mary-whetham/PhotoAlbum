@@ -48,4 +48,15 @@
     <string name="add_button">add_button</string>
     <string name="right_date_button">right_date_button</string>
     <string name="left_date_button">left_date_button</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="password">Password</string>
+    <string name="to_register">New user? Register Here</string>
+    <string name="to_login">Already registered? Login Here</string>
+    <string name="user_file_key">com.example.practiceapplication.USER_FILE_KEY</string>
+    <string name="user_id">user_id</string>
+    <string name="log_out">Log out</string>
 </resources>

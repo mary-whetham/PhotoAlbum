@@ -7,24 +7,27 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.practiceapplication.data.dao.EventDao
 import com.example.practiceapplication.data.dao.ReminderDao
+import com.example.practiceapplication.data.dao.UserDao
 import com.example.practiceapplication.ui.models.Event
 import com.example.practiceapplication.ui.models.Reminder
+import com.example.practiceapplication.ui.models.User
 
 @Database(
-    entities = [Event::class, Reminder::class],
+    entities = [Event::class, Reminder::class, User::class],
     version = 1
 )
 @TypeConverters(Converters::class)
 abstract class CalendarDatabase: RoomDatabase() {
     abstract fun eventDao(): EventDao
     abstract fun reminderDao(): ReminderDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
         private var instance: CalendarDatabase? = null
         private val LOCK = Any()
 
-        operator fun invoke(context: Context)= instance ?: synchronized(LOCK){
+        operator fun invoke(context: Context) = instance ?: synchronized(LOCK){
             instance ?: buildDatabase(context).also { instance = it}
         }
 
@@ -33,5 +36,13 @@ abstract class CalendarDatabase: RoomDatabase() {
                 context.applicationContext,
                 CalendarDatabase::class.java, "todo-list.db"
             ).build()
+
+        fun getInstance(context: Context): CalendarDatabase {
+            if (instance != null) {
+                return instance as CalendarDatabase
+            } else {
+                return invoke(context)
+            }
+        }
     }
 }

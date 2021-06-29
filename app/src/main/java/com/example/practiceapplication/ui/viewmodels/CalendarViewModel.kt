@@ -17,20 +17,20 @@ class CalendarViewModel(
     var events = MutableLiveData<List<Event>>()
     var reminders = MutableLiveData<List<Reminder>>()
 
-    fun getAllEvents() {
+    fun getAllEvents(user_id: Int) {
         viewModelScope.launch {
             try {
-                events.postValue(calendarRepository.getAllEvents())
+                events.postValue(calendarRepository.getAllEvents(user_id))
             } catch (e: Exception) {
                 Log.i("error", e.message.toString())
             }
         }
     }
 
-    fun getDaysEvents(date: LocalDate) {
+    fun getDaysEvents(user_id: Int, date: LocalDate) {
         viewModelScope.launch {
             try {
-                events.postValue(calendarRepository.getDaysEvents(date))
+                events.postValue(calendarRepository.getDaysEvents(user_id, date))
             } catch (e: Exception) {
                 Log.i("error", e.message.toString())
             }
@@ -57,20 +57,20 @@ class CalendarViewModel(
         }
     }
 
-    fun getAllReminders() {
+    fun getAllReminders(user_id: Int) {
         viewModelScope.launch {
             try {
-                reminders.postValue(calendarRepository.getAllReminders())
+                reminders.postValue(calendarRepository.getAllReminders(user_id))
             } catch (e: Exception) {
                 Log.i("error", e.message.toString())
             }
         }
     }
 
-    fun getDaysReminders(date: LocalDate) {
+    fun getDaysReminders(user_id: Int, date: LocalDate) {
         viewModelScope.launch {
             try {
-                reminders.postValue(calendarRepository.getDaysReminders(date))
+                reminders.postValue(calendarRepository.getDaysReminders(user_id, date))
             } catch (e: Exception) {
                 Log.i("error", e.message.toString())
             }

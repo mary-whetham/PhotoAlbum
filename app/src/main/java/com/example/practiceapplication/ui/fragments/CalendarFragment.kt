@@ -12,6 +12,8 @@ import com.example.practiceapplication.data.CalendarDatabase
 import com.example.practiceapplication.data.repository.CalendarRepository
 import com.example.practiceapplication.ui.viewmodels.CalendarViewModel
 import com.example.practiceapplication.ui.viewmodels.CalendarViewModelFactory
+import com.example.practiceapplication.ui.viewmodels.UserViewModel
+import com.example.practiceapplication.ui.viewmodels.UserViewModelFactory
 
 
 class CalendarFragment : Fragment() {
@@ -29,8 +31,11 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val calendarDatabase by lazy { CalendarDatabase.invoke(view.context) }
+        val calendarDatabase by lazy { CalendarDatabase.getInstance(view.context) }
         val calendarRepository by lazy { CalendarRepository(calendarDatabase) }
+
+        val userViewModel = ViewModelProvider(this, UserViewModelFactory(calendarRepository)).get(UserViewModel::class.java)
+
         calendarViewModel = ViewModelProvider(this, CalendarViewModelFactory(calendarRepository)).get(CalendarViewModel::class.java)
 
         childFragmentManager.beginTransaction().replace(R.id.calendar_container_view, ViewCalendarFragment()).commit()
