@@ -1,10 +1,7 @@
 package com.example.practiceapplication.ui.adapters
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.practiceapplication.ui.fragments.CalendarFragment
 import com.example.practiceapplication.ui.fragments.PhotoFragment

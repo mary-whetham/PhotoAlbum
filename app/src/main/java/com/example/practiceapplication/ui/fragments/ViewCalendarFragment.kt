@@ -1,8 +1,8 @@
 package com.example.practiceapplication.ui.fragments
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +18,12 @@ import kotlinx.android.synthetic.main.fragment_view_calendar.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import kotlin.properties.Delegates
 
 
 class ViewCalendarFragment : Fragment() {
+
+    private var user_id by Delegates.notNull<Int>()
 
     private val calendarViewModel: CalendarViewModel by viewModels({requireParentFragment()})
 
@@ -45,8 +48,13 @@ class ViewCalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        calendarViewModel.getDaysEvents(shownDate)
-        calendarViewModel.getDaysReminders(shownDate)
+        val sharedPref = activity?.getSharedPreferences(getString(R.string.user_file_key), Context.MODE_PRIVATE)
+        if (sharedPref != null) {
+            user_id = sharedPref.getInt(getString(R.string.user_id), 0)
+        }
+
+        calendarViewModel.getDaysEvents(user_id, shownDate)
+        calendarViewModel.getDaysReminders(user_id, shownDate)
 
         eventAdapter = EventRecyclerAdapter(view.context)
         reminderAdapter = ReminderRecyclerAdapter(view.context)
@@ -70,16 +78,16 @@ class ViewCalendarFragment : Fragment() {
         left_button.setOnClickListener{
             shownDate = shownDate.minusDays(1)
             date.text = shownDate.format(formatter)
-            calendarViewModel.getDaysEvents(shownDate)
-            calendarViewModel.getDaysReminders(shownDate)
+            calendarViewModel.getDaysEvents(user_id, shownDate)
+            calendarViewModel.getDaysReminders(user_id, shownDate)
             checkIfEmpty()
         }
 
         right_button.setOnClickListener{
             shownDate = shownDate.plusDays(1)
             date.text = shownDate.format(formatter)
-            calendarViewModel.getDaysEvents(shownDate)
-            calendarViewModel.getDaysReminders(shownDate)
+            calendarViewModel.getDaysEvents(user_id, shownDate)
+            calendarViewModel.getDaysReminders(user_id, shownDate)
             checkIfEmpty()
         }
 

@@ -9,11 +9,11 @@ import java.time.LocalDate
 
 @Dao
 interface EventDao {
-    @Query("SELECT * FROM event")
-    suspend fun getAllEvents(): List<Event>
+    @Query("SELECT * FROM event WHERE user_id = :user_id")
+    suspend fun getAllEvents(user_id: Int): List<Event>
 
-    @Query("SELECT * FROM event WHERE date = :date")
-    suspend fun getDaysEvents(date: LocalDate): List<Event>
+    @Query("SELECT * FROM event WHERE user_id = :user_id AND date = :date")
+    suspend fun getDaysEvents(user_id: Int, date: LocalDate): List<Event>
 
     @Insert
     suspend fun insert(event: Event)

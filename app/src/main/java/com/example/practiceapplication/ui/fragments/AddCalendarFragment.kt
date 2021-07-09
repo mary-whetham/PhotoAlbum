@@ -9,7 +9,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,21 +19,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.example.practiceapplication.R
-import com.example.practiceapplication.ui.models.EVENT_FREQUENCY
-import com.example.practiceapplication.ui.models.Event
-import com.example.practiceapplication.ui.models.REMINDER_FREQUENCY
-import com.example.practiceapplication.ui.models.Reminder
+import com.example.practiceapplication.ui.models.*
 import com.example.practiceapplication.ui.viewmodels.CalendarViewModel
+import com.example.practiceapplication.ui.viewmodels.UserViewModel
 import com.example.practiceapplication.utils.AlarmReceiver
 import kotlinx.android.synthetic.main.fragment_add_calendar.*
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDate.parse
 import java.util.*
+import kotlin.properties.Delegates
 
 
 class AddCalendarFragment : Fragment(), AdapterView.OnItemSelectedListener,
 DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+
+    private var user_id by Delegates.notNull<Int>()
 
     private val calendarViewModel: CalendarViewModel by viewModels({requireParentFragment()})
 
@@ -72,6 +72,11 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPref = activity?.getSharedPreferences(getString(R.string.user_file_key), Context.MODE_PRIVATE)
+        if (sharedPref != null) {
+            user_id = sharedPref.getInt(getString(R.string.user_id), 0)
+        }
 
         val spinnerType: Spinner = view.findViewById(R.id.calendar_type)
         ArrayAdapter.createFromResource(view.context, R.array.calendar_type_array, android.R.layout.simple_spinner_item)
@@ -179,7 +184,7 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
         if (title.isBlank() || description.isBlank() || location.isBlank() || time.isBlank()){
             Toast.makeText(view.context,"Enter value!",Toast.LENGTH_LONG).show()
         } else {
-            val event = Event(title, description, location, date, time, frequency != EVENT_FREQUENCY.ONCE, frequency)
+            val event = Event(user_id, title, description, location, date, time, frequency != EVENT_FREQUENCY.ONCE, frequency)
             calendarViewModel.addEvent(event)
 
             val intent = prepareIntent(view, event)
@@ -211,7 +216,7 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
         if (title.isBlank() || time.isBlank()){
             Toast.makeText(view.context,"Enter value!",Toast.LENGTH_LONG).show()
         } else {
-            val reminder = Reminder(title, date, time, frequency != REMINDER_FREQUENCY.ONCE, frequency)
+            val reminder = Reminder(user_id, title, date, time, frequency != REMINDER_FREQUENCY.ONCE, frequency)
             calendarViewModel.addReminder(reminder)
 
             val intent = prepareIntent(view, reminder)
@@ -272,7 +277,6 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
                 pendingIntent
             )
         } else {
-            Log.i("here", "repeating")
             alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 timeInMillis,

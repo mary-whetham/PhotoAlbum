@@ -7,9 +7,8 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.practiceapplication.MainActivity
+import com.example.practiceapplication.ui.activities.ControllerActivity
 import com.example.practiceapplication.R
-import com.example.practiceapplication.ui.fragments.CalendarFragment
 import java.util.*
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -24,7 +23,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationId: Long = Date().time
 
 
-        val returnIntent = Intent(context, MainActivity::class.java).apply {
+        val returnIntent = Intent(context, ControllerActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, returnIntent, 0)
