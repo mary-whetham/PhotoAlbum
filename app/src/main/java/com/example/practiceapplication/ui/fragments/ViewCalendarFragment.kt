@@ -81,6 +81,7 @@ class ViewCalendarFragment : Fragment() {
             calendarViewModel.getDaysEvents(user_id, shownDate)
             calendarViewModel.getDaysReminders(user_id, shownDate)
             checkIfEmpty()
+            checkIfPastDate(shownDate)
         }
 
         right_button.setOnClickListener{
@@ -89,6 +90,7 @@ class ViewCalendarFragment : Fragment() {
             calendarViewModel.getDaysEvents(user_id, shownDate)
             calendarViewModel.getDaysReminders(user_id, shownDate)
             checkIfEmpty()
+            checkIfPastDate(shownDate)
         }
 
         add.setOnClickListener {
@@ -111,6 +113,15 @@ class ViewCalendarFragment : Fragment() {
             reminder_recycler.showEmptyMessage(getString(R.string.no_reminders))
         } else {
             reminder_recycler.updateViews(empty = false, success = true)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun checkIfPastDate(shownDate: LocalDate) {
+        if (shownDate.isBefore(LocalDate.now())) {
+            add.visibility = View.GONE
+        } else {
+            add.visibility = View.VISIBLE
         }
     }
 }

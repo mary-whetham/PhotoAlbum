@@ -26,7 +26,9 @@ import com.example.practiceapplication.utils.AlarmReceiver
 import kotlinx.android.synthetic.main.fragment_add_calendar.*
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.time.LocalDate
 import java.time.LocalDate.parse
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -37,9 +39,6 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private var user_id by Delegates.notNull<Int>()
 
     private val calendarViewModel: CalendarViewModel by viewModels({requireParentFragment()})
-
-    private lateinit var dateEditText: EditText
-    private lateinit var timeEditText: EditText
 
     private lateinit var description: LinearLayout
     private lateinit var location: LinearLayout
@@ -99,8 +98,7 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
         val calendar: Calendar = Calendar.getInstance()
 
-        dateEditText = view.findViewById(R.id.add_date)
-        dateEditText.setOnClickListener {
+        add_date.setOnClickListener {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
             val month = calendar.get(Calendar.MONTH)
             val year = calendar.get(Calendar.YEAR)
@@ -108,8 +106,7 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
             datePickerDialog.show()
         }
 
-        timeEditText = view.findViewById(R.id.add_time)
-        timeEditText.setOnClickListener {
+        add_time.setOnClickListener {
             val hour = calendar.get(Calendar.HOUR)
             val minute = calendar.get(Calendar.MINUTE)
             val timePickerDialog = TimePickerDialog(view.context, this, hour, minute,
@@ -163,37 +160,32 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun addEvent(view: View, calendarViewModel: CalendarViewModel) {
-        val titlePlace = view.findViewById<EditText>(R.id.add_title)
-        val title = titlePlace.text.toString()
 
-        val descriptionPlace = view.findViewById<EditText>(R.id.add_description)
-        val description = descriptionPlace.text.toString()
+        val title = add_title.text.toString()
+        val description = add_description.text.toString()
+        val location = add_location.text.toString()
+        val date = add_date.text.toString()
+        val time = add_time.text.toString()
+        val frequency = EVENT_FREQUENCY.values()[frequency.selectedItemPosition]
 
-        val locationPlace = view.findViewById<EditText>(R.id.add_location)
-        val location = locationPlace.text.toString()
-
-        val datePlace = view.findViewById<EditText>(R.id.add_date)
-        val date = parse(datePlace.text.toString())
-
-        val timePlace = view.findViewById<EditText>(R.id.add_time)
-        val time = timePlace.text.toString()
-
-        val frequencyPlace = view.findViewById<Spinner>(R.id.frequency)
-        val frequency = EVENT_FREQUENCY.values()[frequencyPlace.selectedItemPosition]
-
-        if (title.isBlank() || description.isBlank() || location.isBlank() || time.isBlank()){
-            Toast.makeText(view.context,"Enter value!",Toast.LENGTH_LONG).show()
+        if (title.isBlank() || description.isBlank() || location.isBlank() || date.isBlank() || time.isBlank()){
+            Toast.makeText(view.context,"Enter values in all fills!",Toast.LENGTH_LONG).show()
         } else {
-            val event = Event(user_id, title, description, location, date, time, frequency != EVENT_FREQUENCY.ONCE, frequency)
-            calendarViewModel.addEvent(event)
+            val parsedDate = parse(date)
+            if (timeInMillis < Calendar.getInstance().timeInMillis) {
+                Toast.makeText(view.context,"The date and time cannot be in the past!",Toast.LENGTH_LONG).show()
+            } else {
+                val event = Event(user_id, title, description, location, parsedDate, time, frequency != EVENT_FREQUENCY.ONCE, frequency)
+                calendarViewModel.addEvent(event)
 
-            val intent = prepareIntent(view, event)
-            setAlarm(millisInterval.getValue(frequency.toString()), view, intent)
+                val intent = prepareIntent(view, event)
+                setAlarm(millisInterval.getValue(frequency.toString()), view, intent)
 
-            parentFragmentManager.commit {
-                replace(R.id.calendar_container_view, ViewCalendarFragment())
-                setReorderingAllowed(true)
-                addToBackStack("viewCalendar") // name can be null
+                parentFragmentManager.commit {
+                    replace(R.id.calendar_container_view, ViewCalendarFragment())
+                    setReorderingAllowed(true)
+                    addToBackStack("viewCalendar") // name can be null
+                }
             }
         }
     }
@@ -201,38 +193,37 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     @ExperimentalStdlibApi
     @RequiresApi(Build.VERSION_CODES.O)
     private fun addReminder(view: View, calendarViewModel: CalendarViewModel) {
-        val titlePlace = view.findViewById<EditText>(R.id.add_title)
-        val title = titlePlace.text.toString()
 
-        val datePlace = view.findViewById<EditText>(R.id.add_date)
-        val date = parse(datePlace.text.toString())
+        val title = add_title.text.toString()
+        val date = add_date.text.toString()
+        val time = add_time.text.toString()
+        val frequency = REMINDER_FREQUENCY.values()[frequency.selectedItemPosition]
 
-        val timePlace = view.findViewById<EditText>(R.id.add_time)
-        val time = timePlace.text.toString()
-
-        val frequencyPlace = view.findViewById<Spinner>(R.id.frequency)
-        val frequency = REMINDER_FREQUENCY.values()[frequencyPlace.selectedItemPosition]
-
-        if (title.isBlank() || time.isBlank()){
-            Toast.makeText(view.context,"Enter value!",Toast.LENGTH_LONG).show()
+        if (title.isBlank() || date.isBlank() || time.isBlank()){
+            Toast.makeText(view.context,"Enter values in all fills!",Toast.LENGTH_LONG).show()
         } else {
-            val reminder = Reminder(user_id, title, date, time, frequency != REMINDER_FREQUENCY.ONCE, frequency)
-            calendarViewModel.addReminder(reminder)
+            val parsedDate = parse(date)
+            if (timeInMillis < Calendar.getInstance().timeInMillis) {
+                Toast.makeText(view.context,"The date and time cannot be in the past!",Toast.LENGTH_LONG).show()
+            } else {
+                val reminder = Reminder(user_id, title, parsedDate, time, frequency != REMINDER_FREQUENCY.ONCE, frequency)
+                calendarViewModel.addReminder(reminder)
 
-            val intent = prepareIntent(view, reminder)
-            setAlarm(millisInterval.getValue(frequency.toString()), view, intent)
+                val intent = prepareIntent(view, reminder)
+                setAlarm(millisInterval.getValue(frequency.toString()), view, intent)
 
-            parentFragmentManager.commit {
-                replace(R.id.calendar_container_view, ViewCalendarFragment())
-                setReorderingAllowed(true)
-                addToBackStack("viewCalendar") // name can be null
+                parentFragmentManager.commit {
+                    replace(R.id.calendar_container_view, ViewCalendarFragment())
+                    setReorderingAllowed(true)
+                    addToBackStack("viewCalendar") // name can be null
+                }
             }
         }
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val twoDigit: NumberFormat = DecimalFormat("00")
-        dateEditText.setText("$year-${twoDigit.format(month + 1)}-${twoDigit.format(dayOfMonth)}")
+        add_date.text = "$year-${twoDigit.format(month + 1)}-${twoDigit.format(dayOfMonth)}"
         if (view != null) {
             datePicker = view
         }
@@ -241,7 +232,7 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
         val twoDigit: NumberFormat = DecimalFormat("00")
-        timeEditText.setText("${twoDigit.format(hourOfDay)}:${twoDigit.format(minute)}")
+        add_time.text = "${twoDigit.format(hourOfDay)}:${twoDigit.format(minute)}"
         val cal = Calendar.getInstance()
         if (view != null) {
             cal.set(datePicker.year, datePicker.month, datePicker.dayOfMonth, view.hour, view.minute)
