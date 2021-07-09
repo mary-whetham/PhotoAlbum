@@ -16,6 +16,7 @@ import com.example.practiceapplication.data.response.ApiService
 import com.example.practiceapplication.ui.adapters.PhotoRecyclerAdapter
 import com.example.practiceapplication.ui.viewmodels.PhotoViewModel
 import com.example.practiceapplication.ui.viewmodels.PhotoViewModelFactory
+import kotlinx.android.synthetic.main.fragment_photo.*
 
 
 class PhotoFragment : Fragment(), AdapterView.OnItemSelectedListener {
@@ -25,14 +26,7 @@ class PhotoFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var mainRecycler: RecyclerView
     private lateinit var adapter: PhotoRecyclerAdapter
 
-    private lateinit var editText: EditText
-
     private val apiService = ApiService.getInstance()
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,18 +55,28 @@ class PhotoFragment : Fragment(), AdapterView.OnItemSelectedListener {
             }
         spinnerPhoto.onItemSelectedListener = this
 
-        editText = view.findViewById(R.id.photo_album_number)
-
         val button: Button = view.findViewById(R.id.photo_button)
         button.setOnClickListener {
             if (spinnerPhoto.selectedItem.toString() == "A Photo") {
-                photoViewModel.getPhoto(editText.text.toString().toInt())
+
+                if (photo_album_number.text.isBlank()) {
+                    Toast.makeText(view.context,"Enter photo number!",Toast.LENGTH_LONG).show()
+                } else {
+                    photoViewModel.getPhoto(photo_album_number.text.toString().toInt())
+                }
+
             } else if (spinnerPhoto.selectedItem.toString() == "An Album") {
-                photoViewModel.getAlbum(editText.text.toString().toInt())
+
+                if (photo_album_number.text.isBlank()) {
+                    Toast.makeText(view.context,"Enter album number!",Toast.LENGTH_LONG).show()
+                } else {
+                    photoViewModel.getAlbum(photo_album_number.text.toString().toInt())
+                }
+
             } else if (spinnerPhoto.selectedItem.toString() == "All Photos") {
                 photoViewModel.getAllPhotos()
             }
-            editText.text.clear()
+            photo_album_number.text.clear()
         }
 
         mainRecycler = view.findViewById(R.id.recycler)
@@ -102,13 +106,13 @@ class PhotoFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (parent != null && parent.id == R.id.num_photos) {
             if (parent.getItemAtPosition(position) == "A Photo") {
-                editText.visibility = View.VISIBLE
-                editText.setHint(R.string.photo_number)
+                photo_album_number.visibility = View.VISIBLE
+                photo_album_number.setHint(R.string.photo_number)
             } else if (parent.getItemAtPosition(position) == "An Album") {
-                editText.visibility = View.VISIBLE
-                editText.setHint(R.string.album_number)
+                photo_album_number.visibility = View.VISIBLE
+                photo_album_number.setHint(R.string.album_number)
             } else if (parent.getItemAtPosition(position) == "All Photos") {
-                editText.visibility = View.GONE
+                photo_album_number.visibility = View.GONE
             }
         } else if (parent != null && parent.id == R.id.layout_type) {
             if (parent.getItemAtPosition(position) == "One Column") {

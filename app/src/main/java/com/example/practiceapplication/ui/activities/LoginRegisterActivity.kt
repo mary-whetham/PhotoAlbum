@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +18,7 @@ import com.example.practiceapplication.ui.models.User
 import com.example.practiceapplication.ui.viewmodels.UserViewModel
 import com.example.practiceapplication.ui.viewmodels.UserViewModelFactory
 import kotlinx.android.synthetic.main.activity_login_register.*
+import java.time.LocalDate
 
 class LoginRegisterActivity: AppCompatActivity() {
 
@@ -31,24 +34,42 @@ class LoginRegisterActivity: AppCompatActivity() {
         val userViewModel = ViewModelProvider(this, UserViewModelFactory(calendarRepository)).get(UserViewModel::class.java)
 
         val userObserver = Observer<User> { currentUser ->
-            val editor: SharedPreferences.Editor = sharedPref.edit()
-            editor.putInt(getString(R.string.user_id), currentUser.id)
-            editor.apply()
-            editor.commit()
 
-            val intent = Intent(this, ControllerActivity::class.java)
-            startActivity(intent)
+            if (currentUser != null) {
+                val editor: SharedPreferences.Editor = sharedPref.edit()
+                editor.putInt(getString(R.string.user_id), currentUser.id)
+                editor.apply()
+                editor.commit()
+
+                val intent = Intent(this, ControllerActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Username or password is incorrect!", Toast.LENGTH_LONG).show()
+                password.text.clear()
+            }
         }
 
         userViewModel.user.observe(this, userObserver)
 
         login_or_register.setOnClickListener {
             if (login_or_register.text == getString(R.string.register)) {
-                val user = User(email.text.toString(), first_name.text.toString(), last_name.text.toString(), password.text.toString())
-                userViewModel.addUser(user)
-            }
 
-            userViewModel.loginUser(email.text.toString(), password.text.toString())
+                val emailText = email.text.toString()
+                val firstNameText = first_name.text.toString()
+                val lastNameText = last_name.text.toString()
+                val passwordText = password.text.toString()
+
+                if (emailText.isBlank() || firstNameText.isBlank() || lastNameText.isBlank() || passwordText.isBlank()){
+                    Toast.makeText(this,"Fill in all values!", Toast.LENGTH_LONG).show()
+                } else {
+                    val user = User(emailText, firstNameText, lastNameText, passwordText)
+                    userViewModel.addUser(user)
+
+                    userViewModel.loginUser(emailText, passwordText)
+                }
+            } else {
+                userViewModel.loginUser(email.text.toString(), password.text.toString())
+            }
         }
 
         switch_login_reg.setOnClickListener{
