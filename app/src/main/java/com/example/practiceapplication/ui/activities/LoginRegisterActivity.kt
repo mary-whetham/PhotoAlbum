@@ -5,8 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -18,7 +18,6 @@ import com.example.practiceapplication.ui.models.User
 import com.example.practiceapplication.ui.viewmodels.UserViewModel
 import com.example.practiceapplication.ui.viewmodels.UserViewModelFactory
 import kotlinx.android.synthetic.main.activity_login_register.*
-import java.time.LocalDate
 
 class LoginRegisterActivity: AppCompatActivity() {
 
@@ -33,7 +32,20 @@ class LoginRegisterActivity: AppCompatActivity() {
 
         val userViewModel = ViewModelProvider(this, UserViewModelFactory(calendarRepository)).get(UserViewModel::class.java)
 
+        var emailText = email.text.toString()
+        var firstNameText = first_name.text.toString()
+        var lastNameText = last_name.text.toString()
+        var passwordText = password.text.toString()
+
+        val addObserver = Observer<Long> {
+            userViewModel.loginUser(email.text.toString(), password.text.toString())
+        }
+
+        userViewModel.confirmUser.observe(this, addObserver)
+
         val userObserver = Observer<User> { currentUser ->
+
+            Log.i("data", currentUser.toString())
 
             if (currentUser != null) {
                 val editor: SharedPreferences.Editor = sharedPref.edit()
@@ -44,28 +56,44 @@ class LoginRegisterActivity: AppCompatActivity() {
                 val intent = Intent(this, ControllerActivity::class.java)
                 startActivity(intent)
             } else {
-                Toast.makeText(this, "Username or password is incorrect!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Email or password is incorrect!", Toast.LENGTH_LONG).show()
                 password.text.clear()
             }
         }
 
         userViewModel.user.observe(this, userObserver)
 
+        val emailObserver = Observer<String> { currentEmail ->
+
+            if (currentEmail != null) {
+                Log.i("data", currentEmail)
+                Toast.makeText(this, "Email already exists!", Toast.LENGTH_LONG).show()
+                email.text.clear()
+                password.text.clear()
+            } else {
+                Log.i("data", "no email")
+                val user = User(emailText, firstNameText, lastNameText, passwordText)
+                userViewModel.addUser(user)
+            }
+        }
+
+        userViewModel.confirmEmail.observe(this, emailObserver)
+
         login_or_register.setOnClickListener {
             if (login_or_register.text == getString(R.string.register)) {
 
-                val emailText = email.text.toString()
-                val firstNameText = first_name.text.toString()
-                val lastNameText = last_name.text.toString()
-                val passwordText = password.text.toString()
+                emailText = email.text.toString()
+                firstNameText = first_name.text.toString()
+                lastNameText = last_name.text.toString()
+                passwordText = password.text.toString()
 
                 if (emailText.isBlank() || firstNameText.isBlank() || lastNameText.isBlank() || passwordText.isBlank()){
                     Toast.makeText(this,"Fill in all values!", Toast.LENGTH_LONG).show()
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
+                    Toast.makeText(this, "Email address format is incorrect!", Toast.LENGTH_LONG).show()
+                    email.text.clear()
                 } else {
-                    val user = User(emailText, firstNameText, lastNameText, passwordText)
-                    userViewModel.addUser(user)
-
-                    userViewModel.loginUser(emailText, passwordText)
+                    userViewModel.getEmail(emailText)
                 }
             } else {
                 userViewModel.loginUser(email.text.toString(), password.text.toString())
