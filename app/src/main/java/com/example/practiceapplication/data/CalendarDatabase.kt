@@ -14,7 +14,7 @@ import com.example.practiceapplication.ui.models.User
 
 @Database(
     entities = [Event::class, Reminder::class, User::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(Converters::class)
 abstract class CalendarDatabase: RoomDatabase() {
@@ -35,7 +35,7 @@ abstract class CalendarDatabase: RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 CalendarDatabase::class.java, "todo-list.db"
-            ).build()
+            ).fallbackToDestructiveMigration().build()
 
         fun getInstance(context: Context): CalendarDatabase {
             if (instance != null) {
