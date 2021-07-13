@@ -1,7 +1,6 @@
 package com.example.practiceapplication.data.repository
 
 import com.example.practiceapplication.data.CalendarDatabase
-import com.example.practiceapplication.data.response.ApiService
 import com.example.practiceapplication.ui.models.Event
 import com.example.practiceapplication.ui.models.Reminder
 import com.example.practiceapplication.ui.models.User
@@ -21,5 +20,6 @@ class CalendarRepository constructor(
 
     suspend fun getUser(id: Int) = calendarDatabase.userDao().getUser(id)
     suspend fun loginUser(email: String, password: String) = calendarDatabase.userDao().loginUser(email, password)
+    suspend fun getEmail(email: String) = calendarDatabase.userDao().getEmail(email)
     suspend fun insertUser(user: User) = calendarDatabase.userDao().insert(user)
 }

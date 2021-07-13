@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -55,7 +54,7 @@ class ControllerActivity : AppCompatActivity() {
         logout.setOnClickListener {
             val editor: SharedPreferences.Editor = sharedPref.edit()
             editor.clear()
-            editor.commit()
+            editor.apply()
 
             val intent = Intent(this, LoginRegisterActivity::class.java)
             startActivity(intent)
@@ -72,6 +71,13 @@ class ControllerActivity : AppCompatActivity() {
 
         createNotificationChannel()
 
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 
     private fun createNotificationChannel() {

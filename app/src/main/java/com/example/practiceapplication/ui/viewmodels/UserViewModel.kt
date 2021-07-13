@@ -13,6 +13,8 @@ class UserViewModel(
 ): ViewModel() {
 
     var user = MutableLiveData<User>()
+    var confirmEmail = MutableLiveData<String>()
+    var confirmUser = MutableLiveData<Long>()
 
     fun getUser(id: Int) {
         viewModelScope.launch {
@@ -28,6 +30,17 @@ class UserViewModel(
         viewModelScope.launch {
             try {
                 user.postValue(calendarRepository.loginUser(email, password))
+                Log.i("view model", user.toString())
+            } catch (e: Exception) {
+                Log.i("error", e.message.toString())
+            }
+        }
+    }
+
+    fun getEmail(email: String) {
+        viewModelScope.launch {
+            try {
+                confirmEmail.postValue(calendarRepository.getEmail(email))
             } catch (e: Exception) {
                 Log.i("error", e.message.toString())
             }
@@ -37,7 +50,7 @@ class UserViewModel(
     fun addUser(user: User) {
         viewModelScope.launch {
             try {
-                calendarRepository.insertUser(user)
+                confirmUser.postValue(calendarRepository.insertUser(user))
             } catch (e: Exception) {
                 Log.i("error", e.message.toString())
             }
