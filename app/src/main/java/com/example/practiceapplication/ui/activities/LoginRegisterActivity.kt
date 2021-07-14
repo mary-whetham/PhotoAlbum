@@ -44,9 +44,6 @@ class LoginRegisterActivity: AppCompatActivity() {
         userViewModel.confirmUser.observe(this, addObserver)
 
         val userObserver = Observer<User> { currentUser ->
-
-            Log.i("data", currentUser.toString())
-
             if (currentUser != null) {
                 val editor: SharedPreferences.Editor = sharedPref.edit()
                 editor.putInt(getString(R.string.user_id), currentUser.id)
@@ -66,12 +63,10 @@ class LoginRegisterActivity: AppCompatActivity() {
         val emailObserver = Observer<String> { currentEmail ->
 
             if (currentEmail != null) {
-                Log.i("data", currentEmail)
                 Toast.makeText(this, "Email already exists!", Toast.LENGTH_LONG).show()
                 email.text.clear()
                 password.text.clear()
             } else {
-                Log.i("data", "no email")
                 val user = User(emailText, firstNameText, lastNameText, passwordText)
                 userViewModel.addUser(user)
             }
@@ -115,5 +110,12 @@ class LoginRegisterActivity: AppCompatActivity() {
                 switch_login_reg.text = getString(R.string.to_login)
             }
         }
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 }

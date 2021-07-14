@@ -30,7 +30,6 @@ class UserViewModel(
         viewModelScope.launch {
             try {
                 user.postValue(calendarRepository.loginUser(email, password))
-                Log.i("view model", user.toString())
             } catch (e: Exception) {
                 Log.i("error", e.message.toString())
             }

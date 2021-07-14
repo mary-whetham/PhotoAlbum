@@ -158,6 +158,9 @@ DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     }
 
+
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun addEvent(view: View, calendarViewModel: CalendarViewModel) {
 
