@@ -50,6 +50,11 @@ class LoginRegisterActivity: AppCompatActivity() {
                 editor.apply()
                 editor.commit()
 
+                email.text.clear()
+                first_name.text.clear()
+                last_name.text.clear()
+                password.text.clear()
+
                 val intent = Intent(this, ControllerActivity::class.java)
                 startActivity(intent)
             } else {
@@ -92,6 +97,8 @@ class LoginRegisterActivity: AppCompatActivity() {
                 }
             } else {
                 userViewModel.loginUser(email.text.toString(), password.text.toString())
+                email.text.clear()
+                password.text.clear()
             }
         }
 
@@ -102,12 +109,20 @@ class LoginRegisterActivity: AppCompatActivity() {
                 last_name_block.visibility = View.GONE
                 login_or_register.text = getString(R.string.login)
                 switch_login_reg.text = getString(R.string.to_register)
+
+                email.text.clear()
+                first_name.text.clear()
+                last_name.text.clear()
+                password.text.clear()
             } else if (switch_login_reg.text == getString(R.string.to_register)) {
                 login_reg_title.text = getString(R.string.register)
                 first_name_block.visibility = View.VISIBLE
                 last_name_block.visibility = View.VISIBLE
                 login_or_register.text = getString(R.string.register)
                 switch_login_reg.text = getString(R.string.to_login)
+
+                email.text.clear()
+                password.text.clear()
             }
         }
     }
